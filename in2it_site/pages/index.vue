@@ -2,7 +2,17 @@
 	<div>
 		<div class="content-row">
 			<filters @filterApplied="updateEvents()"></filters>
-			<event-list :events="events"></event-list>
+			<div class="content-col event-container">
+				<event-list :events="events"></event-list>
+				<paginate
+					:page-count="10"
+					:click-handler="paginateHandler"
+					:prev-text="'Prev'"
+					:next-text="'Next'"
+					:container-class="'pagination'"
+					:page-class="'page-item'">
+				</paginate>
+			</div>
 		</div>
 	</div>	
 </template>
@@ -28,6 +38,7 @@
 		data() {
 			return {
 				events: [],
+				pageSize: 10
 			};
 		},
 		asyncData ({ app, params }) {
@@ -40,7 +51,7 @@
                 return { events: dummyData };
 			}
 			const eventService = getClient(eventURL);
-			return eventService.find({query: {}})
+			return eventService.find({query: {limit: 10}})
 				.then(res => {
 					return { events: res };
 				});
@@ -53,12 +64,18 @@
 						startTime: this.$store.searchFilter.startDate, 
 						endTime: this.$store.searchFilter.endDate,
 						miles: this.$store.searchFilter.searchRadius,
-						address: this.$store.searchFilter.addressOrZip || '60611'
+						address: this.$store.searchFilter.addressOrZip || '60611',
+						limit: this.pageSize,
+						offset: (this.$store.searchFilter.pageNum - 1) * this.pageSize
 					}
 				})
 				.then((res) => {
 					this.events = res;
 				});
+			},
+			paginateHandler: function(pageNum){
+				this.$store.searchFilter.pageNum = pageNum;
+				this.updateEvents();
 			}
 		},
 		components: {

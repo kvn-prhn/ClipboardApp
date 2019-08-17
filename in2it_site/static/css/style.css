@@ -152,6 +152,10 @@ body{
 	overflow: visible;
 }
 
+.event-container{
+	margin-top:0px;
+}
+
 .event-listing-link:hover{
 	text-decoration: none;
 }

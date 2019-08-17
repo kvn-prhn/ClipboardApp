@@ -145,9 +145,13 @@
 					addressOrZip: '60647',
 					searchRadius: 3,
 					startDate: this.defaultFromDate,
-					endDate: this.defaultToDate
+					endDate: this.defaultToDate,
+					pageNum: 1
 				}
 			};
+		},
+		mounted(){
+			this.$store.searchFilter = this.searchFilter;
 		},
 		computed: {
 			defaultFromDate: function() {
@@ -171,7 +175,6 @@
 			},
 			filter: function() {
 				this.setDates();
-				this.$store.searchFilter = this.searchFilter;
 				this.$emit('filterApplied');
 			},
 			setDates: function() {
